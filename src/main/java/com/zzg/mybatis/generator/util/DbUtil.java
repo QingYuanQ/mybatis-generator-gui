@@ -161,7 +161,9 @@ public class DbUtil {
 				while (rs.next()) {
 					tables.add(rs.getString("name"));
 				}
-			} else {
+			} else if (DbType.valueOf(config.getDbType()) == DbType.DM8) {
+                rs = md.getTables(null, config.getUsername().toUpperCase(), null, new String[]{"TABLE", "VIEW"});
+            } else {
 				// rs = md.getTables(null, config.getUsername().toUpperCase(), null, null);
 				rs = md.getTables(config.getSchema(), null, "%", new String[]{"TABLE", "VIEW"});//针对 postgresql 的左侧数据表显示
 			}
@@ -187,8 +189,13 @@ public class DbUtil {
 		engagePortForwarding(sshSession, dbConfig);
 		Connection conn = getConnection(dbConfig);
 		try {
-			DatabaseMetaData md = conn.getMetaData();
-			ResultSet rs = md.getColumns(dbConfig.getSchema(), null, tableName, null);
+            DatabaseMetaData md = conn.getMetaData();
+            ResultSet rs;
+            if (DbType.valueOf(dbConfig.getDbType()) == DbType.DM8) {
+                rs = md.getColumns(null, dbConfig.getUsername().toUpperCase(), tableName, null);
+            } else {
+                rs = md.getColumns(dbConfig.getSchema(), null, tableName, null);
+            }
 			List<UITableColumnVO> columns = new ArrayList<>();
 			while (rs.next()) {
 				UITableColumnVO columnVO = new UITableColumnVO();

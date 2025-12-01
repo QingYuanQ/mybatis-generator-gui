@@ -82,13 +82,18 @@ public class MybatisGeneratorBridge {
 			// 由于beginningDelimiter和endingDelimiter的默认值为双引号(")，在Mysql中不能这么写，所以还要将这两个默认值改为`
 			context.addProperty("beginningDelimiter", "`");
 			context.addProperty("endingDelimiter", "`");
-		} else {
+        } else if (DbType.DM8.name().equals(dbType)) {
+            tableConfig.setSchema(StringUtils.defaultIfBlank(selectedDatabaseConfig.getUsername(), selectedDatabaseConfig.getSchema()));
+            tableConfig.setDelimitIdentifiers(true);
+            context.addProperty("beginningDelimiter", "\"");
+            context.addProperty("endingDelimiter", "\"");
+        } else {
             tableConfig.setCatalog(selectedDatabaseConfig.getSchema());
-	    }
+        }
         if (generatorConfig.isUseSchemaPrefix()) {
             if (DbType.MySQL.name().equals(dbType) || DbType.MySQL_8.name().equals(dbType)) {
                 tableConfig.setSchema(selectedDatabaseConfig.getSchema());
-            } else if (DbType.Oracle.name().equals(dbType)) {
+            } else if (DbType.Oracle.name().equals(dbType) || DbType.DM8.name().equals(dbType)) {
                 //Oracle的schema为用户名，如果连接用户拥有dba等高级权限，若不设schema，会导致把其他用户下同名的表也生成一遍导致mapper中代码重复
                 tableConfig.setSchema(selectedDatabaseConfig.getUsername());
             } else {
@@ -144,7 +149,7 @@ public class MybatisGeneratorBridge {
         jdbcConfig.setConnectionURL(DbUtil.getConnectionUrlWithSchema(selectedDatabaseConfig));
         jdbcConfig.setUserId(selectedDatabaseConfig.getUsername());
         jdbcConfig.setPassword(selectedDatabaseConfig.getPassword());
-        if(DbType.Oracle.name().equals(dbType)){
+        if(DbType.Oracle.name().equals(dbType) || DbType.DM8.name().equals(dbType)){
             jdbcConfig.getProperties().setProperty("remarksReporting", "true");
         }
         // java model
