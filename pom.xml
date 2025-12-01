@@ -9,8 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-        <!-- Java 11请修改此处为11 -->
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -75,51 +74,34 @@
             <artifactId>mybatis-generator-lombok-plugin</artifactId>
             <version>1.0</version>
         </dependency>
-        <!-- Java 11请关闭下面注释 -->
-        <!--
+        <!-- OpenJFX for JDK 17 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11</version>
+            <version>17</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
+            <version>17</version>
         </dependency>
-        -->
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.11.0</version>
                 <configuration>
-                    <!-- Java 11请修改此处为11 -->
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <release>17</release>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.zenjava</groupId>
+                <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.8.3</version>
+                <version>0.0.8</version>
                 <configuration>
-                    <bundleArguments>
-                        <!-- windows打包开启-->
-                        <icon>${project.basedir}/package/windows/mybatis-generator-gui.ico</icon>
-                        <!-- mac打包开启-->
-                        <icon>${project.basedir}/package/macosx/mybatis-generator-gui.icns</icon>
-                    </bundleArguments>
                     <mainClass>com.zzg.mybatis.generator.MainUI</mainClass>
-                    <vendor>Owen Zou</vendor>
-                    <verbose>false</verbose>
-                    <jfxMainAppJarName>mybatis-generator-gui.jar</jfxMainAppJarName>
-                    <needShortcut>true</needShortcut>
-                    <needMenu>true</needMenu>
-                    <copyAdditionalAppResourcesToJar>true</copyAdditionalAppResourcesToJar>
-                    <additionalAppResources>${project.basedir}/src/main/resources</additionalAppResources>
                 </configuration>
             </plugin>
         </plugins>
